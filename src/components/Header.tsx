@@ -6,12 +6,13 @@ const Bar = styled.header`
   position: sticky;
   top: 0;
   z-index: 10;
-  background: #0a5bd3;
+  background: ${({ theme }) => theme.colors.primary};
   color: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 14px 24px;
+  box-shadow: ${({ theme }) => theme.shadow.xs}; /* Sombra sutil para profundidade */
 `;
 
 const Brand = styled.a`
@@ -21,7 +22,7 @@ const Brand = styled.a`
   color: #ffffff;
   text-decoration: none;
   font-family: Inter, system-ui, -apple-system, Arial, sans-serif;
-  span { color: #ffd60a; }
+  span { color: ${({ theme }) => theme.colors.accent}; }
 `;
 
 const Nav = styled.nav`

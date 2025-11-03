@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 const Section = styled.section`
-  background: #0a5bd3;
+  background: ${({ theme }) => theme.colors.primary};
   color: #ffffff;
   text-align: center;
-  padding: 48px 16px;
+  padding: 56px 16px;
 `;
 
 const Wrap = styled.div`
@@ -44,7 +44,7 @@ const Textarea = styled.textarea`
 `;
 
 const Button = styled.button`
-  background: #ffd60a;
+  background: ${({ theme }) => theme.colors.accent};
   color: #0a0a0a;
   padding: 12px;
   border: none;

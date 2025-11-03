@@ -2,16 +2,16 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 const Wrap = styled.section`
-  background: linear-gradient(90deg, #0a5bd3 0%, #00b4d8 100%);
+  background: linear-gradient(90deg, ${({ theme }) => theme.colors.primary} 0%, #00b4d8 100%);
   color: #ffffff;
   text-align: center;
-  padding: 64px 16px;
+  padding: 72px 16px; /* Mais respiro para sensação moderna */
 `;
 
 const Title = styled.h1`
   font-family: Inter, system-ui, -apple-system, Arial, sans-serif;
   font-weight: 700;
-  font-size: 32px;
+  font-size: 36px;
   line-height: 1.2;
   letter-spacing: -0.3px;
   margin: 0 0 12px;
@@ -19,7 +19,7 @@ const Title = styled.h1`
 
 const Subtitle = styled.p`
   font-family: Inter, system-ui, -apple-system, Arial, sans-serif;
-  font-size: 16px;
+  font-size: 17px;
   opacity: 0.95;
 `;
 
@@ -38,13 +38,14 @@ const Input = styled.input`
   border-radius: 10px;
   outline: none;
   font-size: 16px;
+  box-shadow: ${({ theme }) => theme.shadow.xs}; /* Profundidade leve */
 `;
 
 const CTA = styled.button`
   padding: 12px 18px;
   border: none;
   border-radius: 10px;
-  background: #ffd60a;
+  background: ${({ theme }) => theme.colors.accent};
   color: #0a0a0a;
   font-weight: 700;
   cursor: pointer;
@@ -55,7 +56,8 @@ const CTA = styled.button`
 
 export function Hero({ value, onChange, onBuscar }:{ value: string; onChange: (v: string) => void; onBuscar: () => void; }) {
   return (
-    <Wrap as={motion.section} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+    {/* Adicionada animação de fade-in na dobra principal */}
+    <Wrap as={motion.section} initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
       <Title>Encontre o profissional certo para o seu serviço</Title>
       <Subtitle>Profissionais verificados a um clique de distância.</Subtitle>
       <Row>

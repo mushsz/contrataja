@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { Profissional } from '../data/profissionais';
 
 const Section = styled.section`
-  background: #ffffff;
-  border-top: 1px solid #eef0f3;
-  padding: 36px 16px 48px;
+  background: ${({ theme }) => theme.colors.surface};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  padding: 44px 16px 56px;
 `;
 
 const Wrap = styled.div`
@@ -15,7 +15,7 @@ const Wrap = styled.div`
 
 const Title = styled.h2`
   text-align: center;
-  color: #0a5bd3;
+  color: ${({ theme }) => theme.colors.primary};
   font-family: Inter, system-ui, -apple-system, Arial, sans-serif;
   margin: 0 0 20px;
 `;
@@ -28,11 +28,11 @@ const Grid = styled.div`
 
 const Card = styled.div`
   background: #f9fafb;
-  border: 1px solid #eef0f3;
+  border: 1px solid ${({ theme }) => theme.colors.border};
   padding: 14px;
-  border-radius: 12px;
+  border-radius: ${({ theme }) => theme.radius.md};
   text-align: center;
-  box-shadow: 0 4px 12px rgba(3,27,78,0.06);
+  box-shadow: ${({ theme }) => theme.shadow.sm};
 `;
 
 const Img = styled.img`
@@ -44,12 +44,12 @@ const Img = styled.img`
 `;
 
 const Name = styled.h4`
-  color: #0a5bd3;
+  color: ${({ theme }) => theme.colors.primary};
   margin: 0 0 6px;
 `;
 
 const Text = styled.p`
-  color: #4b5563;
+  color: ${({ theme }) => theme.colors.subtext};
   margin: 0 0 4px;
 `;
 
@@ -59,6 +59,7 @@ export function Professionals({ list }: { list: Profissional[] }) {
     <Section id="profissionais" aria-label="Profissionais disponíveis">
       <Wrap>
         <Title>Profissionais Disponíveis</Title>
+        {/* Fade-in/slide-in para cada card ao ficar visível */}
         <Grid>
           {list.map((p, i) => (
             <Card as={motion.div} key={p.nome} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>

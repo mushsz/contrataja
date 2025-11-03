@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Bar = styled.footer`
-  background: #023e8a;
+  background: ${({ theme }) => theme.colors.footer};
   color: #ffffff;
   text-align: center;
   padding: 16px;

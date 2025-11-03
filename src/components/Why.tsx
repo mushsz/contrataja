@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 const Section = styled.section`
-  background: #ffffff;
-  padding: 48px 16px;
+  background: ${({ theme }) => theme.colors.surface};
+  padding: 56px 16px;
 `;
 
 const Wrap = styled.div`
@@ -12,7 +12,7 @@ const Wrap = styled.div`
 `;
 
 const Title = styled.h2`
-  color: #0a5bd3;
+  color: ${({ theme }) => theme.colors.primary};
   text-align: center;
   margin: 0 0 24px;
 `;
@@ -25,9 +25,9 @@ const Grid = styled.div`
 
 const Card = styled.div`
   background: #f5f7fb;
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 6px 14px rgba(3,27,78,0.05);
+  border-radius: ${({ theme }) => theme.radius.md};
+  padding: 20px;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
 `;
 
 const Icon = styled.span`

@@ -47,7 +47,8 @@ export function App() {
   }
 
   return (
-    <div style={{ background: '#f6f7fb', color: '#111827', minHeight: '100vh', fontFamily: 'Inter, system-ui, -apple-system, Arial, sans-serif' }}>
+    // Estrutura principal com fundo e tipografia vindos do GlobalStyle/Theme
+    <div style={{ minHeight: '100vh' }}>
       {/* Header com navegação clara e contraste */}
       <Header />
       {/* Hero com CTA destacado e busca acessível */}
