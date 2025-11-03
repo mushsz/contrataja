@@ -56,8 +56,9 @@ const CTA = styled.button`
 
 export function Hero({ value, onChange, onBuscar }:{ value: string; onChange: (v: string) => void; onBuscar: () => void; }) {
   return (
-    {/* Adicionada animação de fade-in na dobra principal */}
-    <Wrap as={motion.section} initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+    <>
+      {/* Adicionada animação de fade-in na dobra principal */}
+      <Wrap as={motion.section} initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
       <Title>Encontre o profissional certo para o seu serviço</Title>
       <Subtitle>Profissionais verificados a um clique de distância.</Subtitle>
       <Row>
@@ -70,7 +71,8 @@ export function Hero({ value, onChange, onBuscar }:{ value: string; onChange: (v
         />
         <CTA type="button" onClick={onBuscar}>Buscar</CTA>
       </Row>
-    </Wrap>
+      </Wrap>
+    </>
   );
 }
 
