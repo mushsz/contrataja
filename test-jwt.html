@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste JWT - ContrataJá</title>
+  <style>
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f6f7fb;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    button {
+      background: #0A5BD3;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 5px;
+    }
+    button:hover { background: #084ab0; }
+    .result {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    .success { background: #d1fae5; color: #065f46; }
+    .error { background: #fee2e2; color: #991b1b; }
+    .info { background: #dbeafe; color: #1e40af; }
+    h2 { color: #0A5BD3; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Teste do Sistema JWT</h1>
+  <p>Verifique se o servidor está rodando em <code>http://localhost:3001</code></p>
+
+  <div class="test-section">
+    <h2>1. Health Check</h2>
+    <button onclick="testHealth()">Testar Health Check</button>
+    <div id="health-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>2. Registro de Usuário</h2>
+    <input type="text" id="nome" placeholder="Nome" value="Teste User" style="padding: 8px; margin: 5px; width: 200px;">
+    <input type="email" id="email" placeholder="Email" value="" style="padding: 8px; margin: 5px; width: 200px;">
+    <input type="password" id="senha" placeholder="Senha" value="senha123" style="padding: 8px; margin: 5px; width: 200px;">
+    <br>
+    <button onclick="testRegister()">Testar Registro</button>
+    <div id="register-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>3. Login</h2>
+    <input type="email" id="login-email" placeholder="Email" style="padding: 8px; margin: 5px; width: 200px;">
+    <input type="password" id="login-senha" placeholder="Senha" value="senha123" style="padding: 8px; margin: 5px; width: 200px;">
+    <br>
+    <button onclick="testLogin()">Testar Login</button>
+    <div id="login-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>4. Rota Protegida (/auth/me)</h2>
+    <button onclick="testMe()">Testar Rota Protegida</button>
+    <div id="me-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>5. Token Inválido</h2>
+    <button onclick="testInvalidToken()">Testar Token Inválido</button>
+    <div id="invalid-result"></div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:3001/api';
+    let savedToken = localStorage.getItem('test_token') || '';
+
+    function showResult(id, data, isError = false) {
+      const el = document.getElementById(id);
+      el.className = 'result ' + (isError ? 'error' : 'success');
+      el.textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function testHealth() {
+      try {
+        const res = await fetch('http://localhost:3001/health');
+        const data = await res.json();
+        showResult('health-result', data);
+      } catch (e) {
+        showResult('health-result', { error: e.message }, true);
+      }
+    }
+
+    async function testRegister() {
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value || `teste${Date.now()}@example.com`;
+      const senha = document.getElementById('senha').value;
+
+      try {
+        const res = await fetch(`${API_URL}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, email, senha }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          savedToken = data.token;
+          localStorage.setItem('test_token', savedToken);
+          document.getElementById('email').value = email;
+          document.getElementById('login-email').value = email;
+          showResult('register-result', { ...data, token: data.token.substring(0, 30) + '...' });
+        } else {
+          showResult('register-result', data, true);
+        }
+      } catch (e) {
+        showResult('register-result', { error: e.message }, true);
+      }
+    }
+
+    async function testLogin() {
+      const email = document.getElementById('login-email').value;
+      const senha = document.getElementById('login-senha').value;
+
+      try {
+        const res = await fetch(`${API_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, senha }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          savedToken = data.token;
+          localStorage.setItem('test_token', savedToken);
+          showResult('login-result', { ...data, token: data.token.substring(0, 30) + '...' });
+        } else {
+          showResult('login-result', data, true);
+        }
+      } catch (e) {
+        showResult('login-result', { error: e.message }, true);
+      }
+    }
+
+    async function testMe() {
+      if (!savedToken) {
+        showResult('me-result', { error: 'Faça login primeiro para obter um token' }, true);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/auth/me`, {
+          headers: { 'Authorization': `Bearer ${savedToken}` },
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showResult('me-result', data);
+        } else {
+          showResult('me-result', data, true);
+        }
+      } catch (e) {
+        showResult('me-result', { error: e.message }, true);
+      }
+    }
+
+    async function testInvalidToken() {
+      try {
+        const res = await fetch(`${API_URL}/auth/me`, {
+          headers: { 'Authorization': 'Bearer token_invalido_123' },
+        });
+        const data = await res.json();
+        if (res.status === 403 || res.status === 401) {
+          showResult('invalid-result', { status: res.status, message: 'Token inválido rejeitado corretamente!' });
+        } else {
+          showResult('invalid-result', { error: 'Token inválido foi aceito (erro de segurança!)' }, true);
+        }
+      } catch (e) {
+        showResult('invalid-result', { error: e.message }, true);
+      }
+    }
+
+    // Carrega email salvo
+    if (savedToken) {
+      document.getElementById('login-email').value = localStorage.getItem('test_email') || '';
+    }
+  </script>
+</body>
+</html>
+

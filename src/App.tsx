@@ -7,6 +7,8 @@ import { Professionals } from './components/Professionals';
 import { Why } from './components/Why';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
+import { Login } from './components/Login';
+import { Register } from './components/Register';
 
 const allCards: CardItem[] = [
   { key: 'engenheiro', emoji: '👷‍♂️', title: 'Engenheiro', desc: 'Projetos e consultoria técnica.' },
@@ -30,6 +32,8 @@ export function App() {
   const [busca, setBusca] = useState('');
   const [expanded, setExpanded] = useState(false);
   const [selecionado, setSelecionado] = useState<ServicoKey | null>(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
 
   const filteredCards = useMemo(() => {
     const term = busca.trim().toLowerCase();
@@ -50,7 +54,11 @@ export function App() {
     // Estrutura principal com fundo e tipografia vindos do GlobalStyle/Theme
     <div style={{ minHeight: '100vh' }}>
       {/* Header com navegação clara e contraste */}
-      <Header />
+      <Header
+        onLoginClick={() => setShowLogin(true)}
+        onRegisterClick={() => setShowRegister(true)}
+        onLogout={() => window.location.reload()}
+      />
       {/* Hero com CTA destacado e busca acessível */}
       <Hero value={busca} onChange={setBusca} onBuscar={handleBuscar} />
       {/* Serviços com cards responsivos e botão de ver mais */}
@@ -68,6 +76,28 @@ export function App() {
       {/* Contato com feedback em tempo real */}
       <Contact />
       <Footer />
+
+      {/* Modais de autenticação */}
+      {showLogin && (
+        <Login
+          onClose={() => setShowLogin(false)}
+          onSwitchToRegister={() => {
+            setShowLogin(false);
+            setShowRegister(true);
+          }}
+          onSuccess={() => window.location.reload()}
+        />
+      )}
+      {showRegister && (
+        <Register
+          onClose={() => setShowRegister(false)}
+          onSwitchToLogin={() => {
+            setShowRegister(false);
+            setShowLogin(true);
+          }}
+          onSuccess={() => window.location.reload()}
+        />
+      )}
     </div>
   );
 }

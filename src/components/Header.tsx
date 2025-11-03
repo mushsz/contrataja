@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
+import { isAuthenticated, removeToken } from '../utils/api';
 
 // Estilo global do topo com foco em contraste, espaçamento e sticky
 const Bar = styled.header`
@@ -28,6 +29,7 @@ const Brand = styled.a`
 const Nav = styled.nav`
   display: flex;
   gap: 16px;
+  align-items: center;
 `;
 
 const Link = styled.a`
@@ -42,7 +44,33 @@ const Link = styled.a`
   &:active { transform: translateY(1px); }
 `;
 
-export function Header() {
+const AuthButton = styled.button`
+  background: ${({ theme }) => theme.colors.accent};
+  color: #0a0a0a;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s ease, transform .15s ease;
+  &:hover { background: #ffcd00; }
+  &:active { transform: translateY(1px); }
+`;
+
+type HeaderProps = {
+  onLoginClick: () => void;
+  onRegisterClick: () => void;
+  onLogout: () => void;
+};
+
+export function Header({ onLoginClick, onRegisterClick, onLogout }: HeaderProps) {
+  const authenticated = isAuthenticated();
+
+  const handleLogout = () => {
+    removeToken();
+    onLogout();
+  };
+
   return (
     <Bar as={motion.header} initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
       <Brand href="#top">Contrata<span>Já</span></Brand>
@@ -50,6 +78,14 @@ export function Header() {
         <Link href="#servicos">Serviços</Link>
         <Link href="#porque">Por que escolher</Link>
         <Link href="#contato">Contato</Link>
+        {authenticated ? (
+          <AuthButton onClick={handleLogout}>Sair</AuthButton>
+        ) : (
+          <>
+            <AuthButton onClick={onLoginClick}>Entrar</AuthButton>
+            <AuthButton onClick={onRegisterClick}>Registrar</AuthButton>
+          </>
+        )}
       </Nav>
     </Bar>
   );
